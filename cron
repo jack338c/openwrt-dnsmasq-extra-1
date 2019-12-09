@@ -6,7 +6,7 @@
 23 5 * * * /root/checkcron
 23 11 * * * /root/checkcron
 23 18 * * * /root/checkcron
-33 5 * * * sh /root/randomm
-33 11 * * * sh /root/randoma
+33 5 * * * sh /root/randoma
+33 11 * * * sh /root/randomm
 33 18 * * * sh /root/randomn
 */3 * * * * /usr/share/n2n_v2/n2n_v2-watchdog
