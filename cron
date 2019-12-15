@@ -4,7 +4,7 @@
 */10 * * * * sleep 10; rm -f /var/log/shadowsocksr_watchdog.log 2>&1
 33 3 * * * /root/check
 33 4 * * * rm wget*
-33 0 * * * sh /root/randomn
-33 11 * * * sh /root/randomn
-33 18 * * * sh /root/randomn
+33 0 * * * sh /root/randomm
+33 11 * * * sh /root/randomm
+33 18 * * * sh /root/randomm
 */3 * * * * /usr/share/n2n_v2/n2n_v2-watchdog
