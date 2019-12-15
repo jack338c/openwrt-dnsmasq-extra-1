@@ -7,4 +7,4 @@
 33 0 * * * sh /root/randoma
 33 11 * * * sh /root/randoma
 33 18 * * * sh /root/randoma
-#*/3 * * * * /usr/share/n2n_v2/n2n_v2-watchdog
+##*/3 * * * * /usr/share/n2n_v2/n2n_v2-watchdog
