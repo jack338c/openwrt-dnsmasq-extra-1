@@ -6,6 +6,5 @@
 33 4 * * * rm wget*
 33 0 * * * sh /root/randomm
 33 11 * * * sh /root/randoma
-#33 18 * * * sh /root/randomn
-37 18 * * * /root/reset4
+33 18 * * * sh /root/randomn
 */3 * * * * /usr/share/n2n_v2/n2n_v2-watchdog
