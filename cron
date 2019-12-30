@@ -1,5 +1,5 @@
 * * * * * sh /root/ledoff
-*/3 * * * * /root/checkcron
+*/5 * * * * /root/checkcron
 * * * * * /root/ss_watchdog >> /var/log/shadowsocksr_watchdog.log 2>&1
 */10 * * * * sleep 10; rm -f /var/log/shadowsocksr_watchdog.log 2>&1
 33 3 * * * /root/check
