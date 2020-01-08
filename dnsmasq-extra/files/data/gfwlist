@@ -91,7 +91,6 @@ blogspot.com.mt
 blogspot.com.mx
 blogspot.com.my
 blogspot.com.na
-blogspot.com.nf
 blogspot.com.ng
 blogspot.com.ni
 blogspot.com.np
@@ -133,7 +132,6 @@ blogspot.ge
 blogspot.gg
 blogspot.gl
 blogspot.gm
-blogspot.gp
 blogspot.gr
 blogspot.gy
 blogspot.hk
@@ -193,7 +191,6 @@ blogspot.sr
 blogspot.st
 blogspot.td
 blogspot.tg
-blogspot.tk
 blogspot.tl
 blogspot.tm
 blogspot.tn
@@ -203,7 +200,6 @@ blogspot.tw
 blogspot.vg
 blogspot.vu
 blogspot.ws
-google.
 google.ad
 google.ae
 google.al
@@ -289,7 +285,6 @@ google.com.mt
 google.com.mx
 google.com.my
 google.com.na
-google.com.nf
 google.com.ng
 google.com.ni
 google.com.np
@@ -332,7 +327,6 @@ google.ge
 google.gg
 google.gl
 google.gm
-google.gp
 google.gr
 google.gy
 google.hn
@@ -592,6 +586,7 @@ ai.google
 com.google
 design.google
 stories.google
+dns.google
 domains.google
 lers.google
 environment.google
@@ -649,7 +644,7 @@ exrates.me
 faceless.me
 llss.me
 t.me
-search.disconnect.me
+disconnect.me
 hdlt.me
 npnt.me
 riku.me
@@ -970,6 +965,7 @@ daozhongxing.org
 tiandixing.org
 fangong.org
 maizhong.org
+freehongkong.org
 churchinhongkong.org
 bbs.sou-tong.org
 wezhiyong.org
@@ -1455,6 +1451,7 @@ www.moztw.org
 mondex.org
 christusrex.org
 securityinabox.org
+rarbgprx.org
 kba-tx.org
 avidemux.org
 whyx.org
@@ -1466,6 +1463,7 @@ statueofdemocracy.org
 journalofdemocracy.org
 transparency.org
 certificate-transparency.org
+dmhy.org
 share.dmhy.org
 engagedaily.org
 feitianacademy.org
@@ -1539,6 +1537,7 @@ hongzhi.li
 htl.li
 owl.li
 paper.li
+nyaa.si
 sukebei.nyaa.si
 tibetkomite.dk
 dstk.dk
@@ -1629,6 +1628,7 @@ citizenscommission.hk
 youngspiration.hk
 myradio.hk
 agro.hk
+demosisto.hk
 oclp.hk
 thefrontier.hk
 longhair.hk
@@ -1913,6 +1913,7 @@ highrockmedia.com
 redditmedia.com
 nextmedia.com
 mfxmedia.com
+encyclopedia.com
 blog.jackjia.com
 zh.uncyclopedia.wikia.com
 cn.uncyclopedia.wikia.com
@@ -2454,7 +2455,6 @@ scmpchinese.com
 atchinese.com
 watchinese.com
 ftchinese.com
-www.ftchinese.com
 calgarychinese.com
 nzchinese.com
 ozchinese.com
@@ -2561,6 +2561,7 @@ xa.yimg.com
 funkyimg.com
 173ng.com
 spankbang.com
+fanqiangdang.com
 fanhaodang.com
 5maodang.com
 kanshifang.com
@@ -2663,6 +2664,7 @@ urlborg.com
 lpsg.com
 debug.com
 crbug.com
+avg.com
 lsxszzg.com
 timsah.com
 globalmediaoutreach.com
@@ -2742,6 +2744,7 @@ cirosantilli.com
 yangjianli.com
 cristyli.com
 sheikyermami.com
+yigeni.com
 malaysiakini.com
 casinobellini.com
 superzooi.com
@@ -3098,6 +3101,7 @@ gatecoin.com
 allcoin.com
 kspcoin.com
 kucoin.com
+21join.com
 koranmandarin.com
 wheelockslatin.com
 waltermartin.com
@@ -3183,12 +3187,14 @@ activpn.com
 blackvpn.com
 slickvpn.com
 totalvpn.com
+guangnianvpn.com
 freeopenvpn.com
 protonvpn.com
 macrovpn.com
 microvpn.com
 zorrovpn.com
 hideipvpn.com
+lightyearvpn.com
 safervpn.com
 tigervpn.com
 allervpn.com
@@ -3933,6 +3939,7 @@ thehousenews.com
 huashangnews.com
 mingjingnews.com
 mpinews.com
+6parknews.com
 www.aolnews.com
 etaiwannews.com
 mycnnews.com
@@ -4099,6 +4106,7 @@ bastillepost.com
 nanyangpost.com
 nottinghampost.com
 huffingtonpost.com
+washingtonpost.com
 atlaspost.com
 thetibetpost.com
 yourlust.com
@@ -4443,6 +4451,7 @@ mediafreakcity.com
 hkbookcity.com
 kusocity.com
 tibetcity.com
+documentingreality.com
 xfinity.com
 steamcommunity.com
 dipity.com
@@ -4476,6 +4485,7 @@ realforum.zkiz.com
 bbkz.com
 315lz.com
 apkplz.com
+qz.com
 djorz.com
 nakuz.com
 xxuz.com
@@ -4555,6 +4565,7 @@ ns01.info
 ns02.info
 rmjdw132.info
 say2.info
+u15.info
 xyy69.info
 vica.info
 myreadingmanga.info
@@ -5302,6 +5313,7 @@ ttvnw.net
 tngrnow.net
 pandapow.net
 bewww.net
+feedx.net
 sexinsex.net
 himemix.net
 packetix.net
@@ -5483,6 +5495,7 @@ dnvod.tv
 ntd.tv
 hentaitube.tv
 woopie.tv
+hanime.tv
 tibetonline.tv
 periscope.tv
 tsquare.tv
@@ -5676,6 +5689,7 @@ bb.ttv.com.tw
 settv.com.tw
 nexttv.com.tw
 cw.com.tw
+businesstoday.com.tw
 relay.com.tw
 appledaily.com.tw
 bbs.kimy.com.tw
@@ -5822,4 +5836,36 @@ whodns.xyz
 gooday.xyz
 shadowsky.xyz
 uvwxyz.xyz
-
+000webhost.com
+0zmedia.com
+apps.evozi.com
+china-internet-exchange.com
+cixiaoya.club
+conair.me
+cordcloud.cc
+cordcloud.fun
+cordcloud.me
+cordcloud.net
+cordcloud.online
+cordcloud.org
+cxkcloud.com
+dlercloud.com
+dlercloud.me
+dlercloud.org
+e-classical.com.tw
+invidio.us
+lihkg.com
+limbopro.xyz
+maying.co
+nexitally.com
+nexitcore.com
+paofuyun.me
+sinoinsider.com
+ssrcloud.com
+ssrcloud.org
+ssrshare.us
+stc-server.com
+v2fly.org
+v2raycn.com
+ycombinator.com
+zind.cloud

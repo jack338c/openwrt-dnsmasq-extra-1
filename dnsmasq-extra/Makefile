@@ -1,12 +1,12 @@
 #
-# Copyright (C) 2018 chenhw2 <https://github.com/chenhw2>
+# Copyright (C) 2018-2020 honwen <https://github.com/honwen>
 #
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dnsmasq-extra
-PKG_VERSION:=2019-06-27
-PKG_RELEASE:=1.2
+PKG_VERSION:=2020-01-05
+PKG_RELEASE:=1.4.3
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)
 
@@ -16,7 +16,7 @@ define Package/dnsmasq-extra
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=Dnsmasq-Extra
-	DEPENDS:=+dnsmasq-full +ipset +curl
+	DEPENDS:=+dnsmasq-full +ipset +curl +dnsFtcp
 	PKGARCH:=all
 endef
 
@@ -57,7 +57,7 @@ define Package/dnsmasq-extra/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/sh/uci-defaults $(1)/etc/uci-defaults/dnsmasq-extra
 	$(INSTALL_DIR) $(1)/etc/dnsmasq-extra.d
-	$(INSTALL_DATA) ./files/data/{gfwlist,tldn,direct,adblock,custom.conf,chnroute.txt} $(1)/etc/dnsmasq-extra.d/
+	$(INSTALL_DATA) ./files/data/{gfwlist,tldn,direct,adblock,custom.conf,bogus.conf,chnroute.txt} $(1)/etc/dnsmasq-extra.d/
 endef
 
 $(eval $(call BuildPackage,dnsmasq-extra))

@@ -2,8 +2,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dnscrypt
-PKG_VERSION:=2019-06-04
-PKG_RELEASE:=2.0.25
+PKG_VERSION:=2019-12-22
+PKG_RELEASE:=2.0.36
 PKG_MAINTAINER:=chenhw2 <https://github.com/chenhw2>
 
 PKG_ARCH:=$(subst mipsel,mipsle,$(ARCH))
@@ -31,7 +31,7 @@ define Build/Prepare
 endef
 
 define Build/Compile
-	echo "$(PKG_NAME)Compile Skiped!"
+	echo "$(PKG_NAME) Compile Skiped!"
 endef
 
 define Package/dnscrypt/install
