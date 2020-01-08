@@ -172,7 +172,7 @@ update() {
 	update_sub 'gfwlist'
 	update_sub 'direct'
 	update_sub 'adblock'
-	update_chn
+#	update_chn
 }
 
 update_sub() {
