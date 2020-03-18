@@ -191,6 +191,7 @@ update() {
 	update_sub 'gfwlist'
 	update_sub 'direct'
 	update_sub 'adblock'
+	update_sub 'tldn'
 #	update_chn
 }
 
