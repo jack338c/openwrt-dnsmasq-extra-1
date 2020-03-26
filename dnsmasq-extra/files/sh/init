@@ -224,23 +224,31 @@ update_sub() {
 
 update_chn() {
 	chnroute=/etc/${NAME}.d/chnroute.txt
-	[ "Z$chnroute" != "Z" ] || return 0
+	cp -f $chnroute /tmp/chnroute.txt.bak
 
 	chnsrc='https://cdn.jsdelivr.net/gh/17mon/china_ip_list/china_ip_list.txt'
 
 	echo "# $chnroute Updating"
-	curl --connect-timeout 10 --max-time 120 -ksSL $chnsrc -o $chnroute
+	curl --retry 3 --connect-timeout 10 --max-time 120 -ksSL $chnsrc -o $chnroute
 	if [ $? -eq 0 ]; then
 		echo "# $chnroute Updated"
 	else
 		echo "# $chnroute NOT Updated"
 	fi
 
-	if [ ! -f "$chnroute" ] || [ $(ls -l "$chnroute" | awk '{print $5}') -lt 4096 ]; then
+	if [ $(cat $chnroute 2>&1 | grep -cE '^[0-9]*\.[0-9]*\.[0-9]*\.[0-9]\/[0-9]*$') -lt 2048 ]; then
+		echo "# $chnroute is broken, rollback Now!"
+		rm -f "$chnroute"
+		cp -f /tmp/chnroute.txt.bak "$chnroute"
+	fi
+
+	if [ $(cat $chnroute 2>&1 | grep -cE '^[0-9]*\.[0-9]*\.[0-9]*\.[0-9]\/[0-9]*$') -lt 2048 ]; then
 		echo "# $chnroute is broken, failsafe Now!"
 		rm -f "$chnroute"
 		cp -f "/rom$chnroute" "$chnroute"
 	fi
+
+	rm -f /tmp/chnroute.txt.bak
 }
 
 rules() {
