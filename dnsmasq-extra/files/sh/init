@@ -197,7 +197,7 @@ update() {
 	update_sub 'direct'
 	update_sub 'adblock'
 	update_sub 'tldn'
-#	update_chn
+	update_chn
 }
 
 update_sub() {
@@ -232,7 +232,7 @@ update_chn() {
 	cp -f $chnroute /tmp/chnroute.txt.bak
 
 	ts=$(date '+%s')
-	chnsrc="https://cdn.jsdelivr.net/gh/17mon/china_ip_list/china_ip_list.txt?${ts}"
+	chnsrc="https://www.googlerouter.com/03/chnroute.txt?${ts}"
 
 	echo "# $chnroute Updating"
 	curl --retry 3 --connect-timeout 10 --max-time 120 -ksSL $chnsrc -o $chnroute
