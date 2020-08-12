@@ -176,6 +176,7 @@ cleanup() {
 	rm -rf ${TARGET}/*-tcp_*.conf 2>/dev/null
 
 	kill -9 $(pgrep -f /usr/bin/dnsFtcp) >/dev/null 2>&1
+	[ -f /etc/config/smartdns ] && /etc/init.d/smartdns restart >/dev/null 2>&1
 	echo " ."
 }
 
