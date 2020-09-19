@@ -198,6 +198,7 @@ update() {
 	update_chn
 	update_sub 'gfwlist'
 	update_sub 'direct'
+	update_sub 'custom.conf'
 	update_others
 }
 
