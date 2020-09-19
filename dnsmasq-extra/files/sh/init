@@ -195,11 +195,19 @@ restart() {
 }
 
 update() {
+	update_chn
 	update_sub 'gfwlist'
 	update_sub 'direct'
-	update_sub 'adblock'
+	update_others
+}
+
+update_others() {
+	overlay_free=$(df -k | grep -E '^overlay' | awk '{print $4}')
+	# only update data: adblock/tldn when disk free > 1MiB
+	[ "Z$overlay_free" == "Z" ] && return 0
+	[ $overlay_free -lt 1024 ] && return 0
 	update_sub 'tldn'
-	update_chn
+	update_sub 'adblock'
 }
 
 update_sub() {
