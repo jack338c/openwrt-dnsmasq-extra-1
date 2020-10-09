@@ -201,6 +201,7 @@ update() {
 	update_sub 'custom.conf'
 	update_sub 'ssr'
 	update_sub 'dns-extra'
+	update_sub 'config'
 	update_others
 }
 
