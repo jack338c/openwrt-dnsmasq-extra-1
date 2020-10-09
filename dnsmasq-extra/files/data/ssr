@@ -124,6 +124,7 @@ EOF
 }
 
 uci set shadowsocksr.@access_control[0].wan_bp_list='/dev/flag_gfwlist'
+uci delete shadowsocksr.@access_control[0].ipt_ext
 uci commit shadowsocksr
 start_rules() {
 	config_load $NAME

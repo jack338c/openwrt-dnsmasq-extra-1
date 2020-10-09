@@ -200,7 +200,6 @@ update() {
 	update_sub 'direct'
 	update_sub 'custom.conf'
 	update_sub 'ssr'
-	update_sub 'config'
 	update_sub 'dns-extra'
 	update_others
 }
