@@ -123,9 +123,9 @@ EOF
 	for _ in `seq 10`; do if ping -4 -q -c 1 -s 0 -W 1 -w 1 t.cn >/dev/null 2>&1; then break; fi; done
 }
 
-uci set shadowsocksr.@access_control[0].wan_bp_list='/dev/flag_gfwlist'
-uci delete shadowsocksr.@access_control[0].ipt_ext
-uci commit shadowsocksr
+sed -i 's+'/etc/chinadns_chnroute.txt'+'/dev/flag_gfwlist'+g' /etc/config/shadowsocksr
+sed -i '/option ipt_ext*/d' /etc/config/shadowsocksr
+
 start_rules() {
 	config_load $NAME
 	/usr/bin/ssr-rules \
