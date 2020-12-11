@@ -184,7 +184,7 @@ stop() {
 	rules
 	echo " ."
 }
-/etc/init.d/chinadns restart
+
 restart() {
 	echo "Restarting $NAME... "
 	cleanup
