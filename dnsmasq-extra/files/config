@@ -1,17 +1,19 @@
 
 config general
-	option enable            1
+	option enable            'enabled'
 	option adblock           'enabled'
 	list plugins             'adguard-home'
 	list plugins             'smartdns'
 	list plugins             'dnscrypt'
+	list plugins             'dnsproxy'
 	list plugins             'chinadns'
 	list pluginsOtcp         'ss-tunnel'
 	list pluginsOtcp         'ssr-tunnel'
 	# list clean_server      '1.1.1.1'
 	# list clean_server      '9.9.9.9'
 	option overwrite_resolve  0
-	option overwrite_smartdns 'enabled'
+	option overwrite_smartdns 0
+	option overwrite_dnsproxy 0
 	# list overwrite_tcp_ns   '1.1.8.8:53'
 	# list overwrite_tcp_ns   '1.1.8.9:53'
 	# list overwrite_tcp_ns   '114.114.114.114:53'
