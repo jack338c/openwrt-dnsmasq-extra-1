@@ -26,7 +26,7 @@ start() {
 	echo -en "Geneareting : $NAME\n    "
 	mkdir -p ${TARGET}
 
-	ss_watchdog=$(sed -n "s/'//g;s/^WATCHDOG_ENDPOINT=//p" /etc/init.d/shadowsocks* | sort -u)
+#	ss_watchdog=$(sed -n "s/'//g;s/^WATCHDOG_ENDPOINT=//p" /etc/init.d/shadowsocks* | sort -u)
 
 	for plugin in $(uci_get_by_type ${NAME} general plugins); do
 		[ -x /usr/bin/${plugin} ] && {
@@ -41,7 +41,7 @@ start() {
 			fi
 			echo -n "plugin:${plugin}, " | tr [a-z] [A-Z]
 			sed "s/^/server=\//;s/$/\/127.0.0.1#${plugin_port}/" ${DATA}/gfwlist ${DATA}/tldn >${TARGET}/plugin_${plugin}.conf
-			echo "server=/${ss_watchdog}/127.0.0.1#${plugin_port}" >>${TARGET}/plugin_${plugin}.conf
+#			echo "server=/${ss_watchdog}/127.0.0.1#${plugin_port}" >>${TARGET}/plugin_${plugin}.conf
 		}
 	done
 
@@ -63,7 +63,7 @@ start() {
 
 			echo -n "plugin-tcp:${plugin}, " | tr [a-z] [A-Z]
 			sed "s/^/server=\//;s/$/\/127.0.0.1#${plugin_tcpport}/" ${DATA}/gfwlist ${DATA}/tldn >${TARGET}/plugin-tcp_${plugin}.conf
-			echo "server=/${ss_watchdog}/127.0.0.1#${plugin_tcpport}" >>${TARGET}/plugin_${plugin}.conf
+#			echo "server=/${ss_watchdog}/127.0.0.1#${plugin_tcpport}" >>${TARGET}/plugin_${plugin}.conf
 		}
 	done
 
@@ -73,8 +73,8 @@ start() {
 		(/usr/bin/dnsFtcp -p $tcpport -s ${server}:53 >/dev/null 2>&1) &
 		echo -n "CLEAN-DNS:${server}, " && sed "s/^/server=\//;s/$/\/${server}/" ${DATA}/gfwlist ${DATA}/tldn >${TARGET}/clean_${server}.conf
 		echo -n "CLEAN-DNS-TCP:${server}, " && sed "s/^/server=\//;s/$/\/127.0.0.1#${tcpport}/" ${DATA}/gfwlist ${DATA}/tldn >>${TARGET}/clean_${server}.conf
-		echo "server=/${ss_watchdog}/${server}" >>${TARGET}/plugin_${plugin}.conf
-		echo "server=/${ss_watchdog}/127.0.0.1#${tcpport}" >>${TARGET}/plugin_${plugin}.conf
+#		echo "server=/${ss_watchdog}/${server}" >>${TARGET}/plugin_${plugin}.conf
+#		echo "server=/${ss_watchdog}/127.0.0.1#${tcpport}" >>${TARGET}/plugin_${plugin}.conf
 	done
 
 	[ 0 -lt $(sed -n '/wan_bp_list/p' /etc/config/shadowsocks* 2>/dev/null | grep -c 'chnroute') ] &&
@@ -221,6 +221,8 @@ update() {
 	update_sub 'gfwlist'
 	update_sub 'direct'
 	update_sub 'custom.conf'
+	update_sub 'line'
+	update_sub 'stadisable'
 	update_others
 }
 
