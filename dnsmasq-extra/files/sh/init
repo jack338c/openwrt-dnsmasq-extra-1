@@ -223,6 +223,7 @@ update() {
 	update_sub 'custom.conf'
 	update_sub 'line'
 	update_sub 'stadisable'
+	update_sub 'staenable'
 	update_others
 }
 

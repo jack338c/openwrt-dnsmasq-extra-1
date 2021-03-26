@@ -1,0 +1,3 @@
+#!/bin/sh
+cp /dev/null /etc/crontabs/root && cat /etc/crone >> /etc/crontabs/root
+/etc/init.d/cron restart
