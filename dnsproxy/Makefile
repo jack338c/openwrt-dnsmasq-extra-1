@@ -2,8 +2,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dnsproxy
-PKG_VERSION:=2020-11-10
-PKG_RELEASE:=0.33.2
+PKG_VERSION:=2021-03-19
+PKG_RELEASE:=0.36.0
 PKG_MAINTAINER:=honwen <https://github.com/honwen>
 
 # OpenWrt ARCH: arm, aarch64, i386, x86_64, mips, mipsel
@@ -25,14 +25,14 @@ ifeq ($(ARCH),aarch64)
 	PKG_ARCH:=arm64
 endif
 
-PKG_SOURCE:=dnsproxy-linux-$(PKG_ARCH)-v$(PKG_RELEASE).tar.gz
+PKG_SOURCE:=$(PKG_NAME)-linux-$(PKG_ARCH)-v$(PKG_RELEASE).tar.gz
 PKG_SOURCE_URL:=https://github.com/AdguardTeam/dnsproxy/releases/download/v$(PKG_RELEASE)/
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_RELEASE)
 PKG_HASH:=skip
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/dnsproxy
+define Package/$(PKG_NAME)
 	SECTION:=net
 	CATEGORY:=Network
 	TITLE:=A simple DNS proxy server of AdguardTeam.
@@ -40,7 +40,7 @@ define Package/dnsproxy
 	DEPENDS:=+ca-bundle
 endef
 
-define Package/dnsproxy/description
+define Package/$(PKG_NAME)/description
 	A simple DNS proxy server that supports all existing DNS protocols.
 endef
 
@@ -52,7 +52,7 @@ define Build/Compile
 	echo "$(PKG_NAME) Compile Skiped!"
 endef
 
-define Package/dnsproxy/install
+define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/config
 	$(INSTALL_DATA) ./files/dnsproxy.conf $(1)/etc/config/dnsproxy
 	$(INSTALL_DIR) $(1)/etc/init.d
@@ -61,4 +61,4 @@ define Package/dnsproxy/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/linux-$(PKG_ARCH)/dnsproxy $(1)/usr/bin/dnsproxy
 endef
 
-$(eval $(call BuildPackage,dnsproxy))
+$(eval $(call BuildPackage,$(PKG_NAME)))

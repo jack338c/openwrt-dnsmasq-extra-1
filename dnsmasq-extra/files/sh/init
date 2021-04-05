@@ -28,6 +28,7 @@ start() {
 
 #	ss_watchdog=$(sed -n "s/'//g;s/^WATCHDOG_ENDPOINT=//p" /etc/init.d/shadowsocks* | sort -u)
 
+	# plugins
 	for plugin in $(uci_get_by_type ${NAME} general plugins); do
 		[ -x /usr/bin/${plugin} ] && {
 			if echo ${plugin} | grep -q 'tunnel'; then
@@ -45,6 +46,7 @@ start() {
 		}
 	done
 
+	# pluginsOtcp
 	for plugin in $(uci_get_by_type ${NAME} general pluginsOtcp); do
 		[ -x /usr/bin/${plugin} ] && {
 			if echo ${plugin} | grep -q 'tunnel'; then
@@ -67,6 +69,7 @@ start() {
 		}
 	done
 
+	# clean_server
 	local tcpport=8300
 	for server in $(uci_get_by_type ${NAME} general clean_server); do
 		tcpport=$((tcpport + 1))
@@ -97,8 +100,8 @@ start() {
 			flush gfwlist
 			add gfwlist 1.0.0.1
 			add gfwlist 8.8.4.4
-			add gfwlist 208.67.220.220
-			add gfwlist 208.67.222.222
+			add gfwlist 9.9.9.0/28
+			add gfwlist 208.67.220.220/22
 			add gfwlist 108.168.174.0/27
 			add gfwlist 109.239.140.0/24
 			add gfwlist 149.154.160.0/20
@@ -168,6 +171,8 @@ start() {
 			sed -n 's+/dns-.*++g; s+$+/162.14.21.178+g; s+.*server_https.*//+server=/+p' /etc/config/smartdns >>${TARGET}/misc_custom.conf
 			sed -n 's+/dns-.*++g; s+$+/162.14.21.56+g; s+.*server_https.*//+server=/+p' /etc/config/smartdns >>${TARGET}/misc_custom.conf
 			sed -n 's+/dns-.*++g; s+$+/223.6.6.6+g; s+.*server_https.*//+server=/+p' /etc/config/smartdns >>${TARGET}/misc_custom.conf
+			echo 'server=/dot.360.cn/114.114.115.115' >>${TARGET}/misc_custom.conf
+			echo 'server=/dot.360.cn/180.76.76.76' >>${TARGET}/misc_custom.conf
 			echo 'server=/doh.360.cn/114.114.115.115' >>${TARGET}/misc_custom.conf
 			echo 'server=/doh.360.cn/180.76.76.76' >>${TARGET}/misc_custom.conf
 			echo 'server=/alidns.com/114.114.115.115' >>${TARGET}/misc_custom.conf
