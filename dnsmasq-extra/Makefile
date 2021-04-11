@@ -73,7 +73,7 @@ define Package/dnsmasq-extra/install
 	$(INSTALL_DIR) $(1)/etc/uci-defaults
 	$(INSTALL_BIN) ./files/sh/uci-defaults $(1)/etc/uci-defaults/dnsmasq-extra
 	$(INSTALL_DIR) $(1)/etc/dnsmasq-extra.d
-	$(INSTALL_DATA) ./files/data/{gfwlist,tldn,direct,adblock,custom.conf,bogus.conf,line,stadisable,staenable,chnroute.txt} $(1)/etc/dnsmasq-extra.d/
+	$(INSTALL_DATA) ./files/data/{gfwlist,chinadns,tldn,direct,adblock,custom.conf,bogus.conf,line,stadisable,staenable,chnroute.txt} $(1)/etc/dnsmasq-extra.d/
 ifeq ($(CONFIG_DNSMASQ_EXTRA_FORCE_SMARTDNS),y)
 	sed 's+\(overwrite_resolve.*\)[0-9]+\1enabled+g' -i $(1)/etc/config/dnsmasq-extra
 	sed 's+\(overwrite_smartdns.*\)[0-9]+\1enabled+g' -i $(1)/etc/config/dnsmasq-extra
