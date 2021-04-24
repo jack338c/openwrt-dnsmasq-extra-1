@@ -1,9 +1,9 @@
 
 include $(TOPDIR)/rules.mk
 
-PKG_NAME:=dnsproxy
-PKG_VERSION:=2021-04-15
-PKG_RELEASE:=0.37.1
+PKG_NAME:=aiodns
+PKG_VERSION:=20210421
+PKG_RELEASE:=b49f36354d
 PKG_MAINTAINER:=honwen <https://github.com/honwen>
 
 # OpenWrt ARCH: arm, aarch64, i386, x86_64, mips, mipsel
@@ -25,9 +25,9 @@ ifeq ($(ARCH),aarch64)
 	PKG_ARCH:=arm64
 endif
 
-PKG_SOURCE:=$(PKG_NAME)-linux-$(PKG_ARCH)-v$(PKG_RELEASE).tar.gz
-PKG_SOURCE_URL:=https://github.com/AdguardTeam/dnsproxy/releases/download/v$(PKG_RELEASE)/
-PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_RELEASE)
+PKG_SOURCE:=$(PKG_NAME)-linux-$(PKG_ARCH)-v$(PKG_VERSION)@$(PKG_RELEASE).tar.gz
+PKG_SOURCE_URL:=https://github.com/honwen/aiodns/releases/download/v$(PKG_VERSION)/
+PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)-$(PKG_RELEASE)
 PKG_HASH:=skip
 
 include $(INCLUDE_DIR)/package.mk
@@ -35,13 +35,13 @@ include $(INCLUDE_DIR)/package.mk
 define Package/$(PKG_NAME)
 	SECTION:=net
 	CATEGORY:=Network
-	TITLE:=A simple DNS proxy server of AdguardTeam.
-	URL:=https://github.com/AdguardTeam/dnsproxy
+	TITLE:=A All-In-One DNS Solution.
+	URL:=https://github.com/honwen/aiodns
 	DEPENDS:=+ca-bundle
 endef
 
 define Package/$(PKG_NAME)/description
-	A simple DNS proxy server that supports all existing DNS protocols.
+	A All-In-One DNS Solution, A Specail-List Rule Generator of AdguardTeam/dnsproxy.
 endef
 
 define Build/Prepare
@@ -54,11 +54,11 @@ endef
 
 define Package/$(PKG_NAME)/install
 	$(INSTALL_DIR) $(1)/etc/config
-	$(INSTALL_DATA) ./files/dnsproxy.conf $(1)/etc/config/dnsproxy
+	$(INSTALL_DATA) ./files/aiodns.conf $(1)/etc/config/aiodns
 	$(INSTALL_DIR) $(1)/etc/init.d
-	$(INSTALL_BIN) ./files/dnsproxy.init $(1)/etc/init.d/dnsproxy
+	$(INSTALL_BIN) ./files/aiodns.init $(1)/etc/init.d/aiodns
 	$(INSTALL_DIR) $(1)/usr/bin
-	$(INSTALL_BIN) $(PKG_BUILD_DIR)/linux-$(PKG_ARCH)/dnsproxy $(1)/usr/bin/dnsproxy
+	$(INSTALL_BIN) $(PKG_BUILD_DIR)/linux-$(PKG_ARCH)/aiodns $(1)/usr/bin/aiodns
 endef
 
 $(eval $(call BuildPackage,$(PKG_NAME)))
