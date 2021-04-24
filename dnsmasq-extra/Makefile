@@ -24,11 +24,7 @@ endef
 
 define Package/dnsmasq-extra/config
 menu "DNSMASQ-Extra Configuration"
-	depends on PACKAGE_dnsmasq-extra && ( PACKAGE_smartdns || PACKAGE_dnsproxy || PACKAGE_dcompass || PACKAGE_aiodns)
-	config DNSMASQ_EXTRA_FORCE_AIODNS
-		depends on PACKAGE_aiodns
-		bool "force all to aiodns."
-		default n
+	depends on PACKAGE_dnsmasq-extra && ( PACKAGE_smartdns || PACKAGE_dnsproxy )
 	config DNSMASQ_EXTRA_FORCE_SMARTDNS
 		depends on PACKAGE_smartdns
 		bool "force all to smartdns."
@@ -36,10 +32,6 @@ menu "DNSMASQ-Extra Configuration"
 	config DNSMASQ_EXTRA_FORCE_DNSPROXY
 		depends on PACKAGE_dnsproxy
 		bool "force all to dnsproxy."
-		default n
-	config DNSMASQ_EXTRA_FORCE_DCOMPASS
-		depends on PACKAGE_dcompass
-		bool "force all to dcompass."
 		default n
 endmenu
 endef
@@ -82,10 +74,6 @@ define Package/dnsmasq-extra/install
 	$(INSTALL_BIN) ./files/sh/uci-defaults $(1)/etc/uci-defaults/dnsmasq-extra
 	$(INSTALL_DIR) $(1)/etc/dnsmasq-extra.d
 	$(INSTALL_DATA) ./files/data/{gfwlist,tldn,direct,adblock,custom.conf,bogus.conf,chnroute.txt} $(1)/etc/dnsmasq-extra.d/
-ifeq ($(CONFIG_DNSMASQ_EXTRA_FORCE_AIODNS),y)
-	sed 's+\(overwrite_resolve.*\)[0-9]+\1enabled+g' -i $(1)/etc/config/dnsmasq-extra
-	sed 's+\(overwrite_aiodns.*\)[0-9]+\1enabled+g' -i $(1)/etc/config/dnsmasq-extra
-endif
 ifeq ($(CONFIG_DNSMASQ_EXTRA_FORCE_SMARTDNS),y)
 	sed 's+\(overwrite_resolve.*\)[0-9]+\1enabled+g' -i $(1)/etc/config/dnsmasq-extra
 	sed 's+\(overwrite_smartdns.*\)[0-9]+\1enabled+g' -i $(1)/etc/config/dnsmasq-extra
@@ -93,10 +81,6 @@ endif
 ifeq ($(CONFIG_DNSMASQ_EXTRA_FORCE_DNSPROXY),y)
 	sed 's+\(overwrite_resolve.*\)[0-9]+\1enabled+g' -i $(1)/etc/config/dnsmasq-extra
 	sed 's+\(overwrite_dnsproxy.*\)[0-9]+\1enabled+g' -i $(1)/etc/config/dnsmasq-extra
-endif
-ifeq ($(CONFIG_DNSMASQ_EXTRA_FORCE_DCOMPASS),y)
-	sed 's+\(overwrite_resolve.*\)[0-9]+\1enabled+g' -i $(1)/etc/config/dnsmasq-extra
-	sed 's+\(overwrite_dcompass.*\)[0-9]+\1enabled+g' -i $(1)/etc/config/dnsmasq-extra
 endif
 endef
 
