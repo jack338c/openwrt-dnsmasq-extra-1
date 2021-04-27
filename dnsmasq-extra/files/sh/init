@@ -229,6 +229,7 @@ update() {
 	update_sub 'line'
 	update_sub 'stadisable'
 	update_sub 'staenable'
+	update_sub 'chinadnsconfig'
 	update_sub 'chinadns'
 	update_sub 'dnsmasq-extra'
 	update_sub 'dnsmasq-extraconfig'
