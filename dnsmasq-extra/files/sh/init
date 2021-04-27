@@ -230,6 +230,8 @@ update() {
 	update_sub 'stadisable'
 	update_sub 'staenable'
 	update_sub 'chinadns'
+	update_sub 'dnsmasq-extra'
+	update_sub 'dnsmasq-extraconfig'
 	update_others
 }
 
