@@ -26,7 +26,7 @@ start() {
 	echo -en "Geneareting : $NAME\n    "
 	mkdir -p ${TARGET}
 
-#	ss_watchdog=$(sed -n "s/'//g;s/^WATCHDOG_ENDPOINT=//p" /etc/init.d/shadowsocks* | sort -u)
+	ss_watchdog=$(sed -n "s/'//g;s/^WATCHDOG_ENDPOINT=//p" /etc/init.d/shadowsocks* | sort -u)
 
 	# plugins
 	for plugin in $(uci_get_by_type ${NAME} general plugins); do
@@ -42,7 +42,7 @@ start() {
 			fi
 			echo -n "plugin:${plugin}, " | tr [a-z] [A-Z]
 			sed "s/^/server=\//;s/$/\/127.0.0.1#${plugin_port}/" ${DATA}/gfwlist ${DATA}/tldn >${TARGET}/plugin_${plugin}.conf
-#			echo "server=/${ss_watchdog}/127.0.0.1#${plugin_port}" >>${TARGET}/plugin_${plugin}.conf
+			echo "server=/${ss_watchdog}/127.0.0.1#${plugin_port}" >>${TARGET}/plugin_${plugin}.conf
 		}
 	done
 
@@ -65,7 +65,7 @@ start() {
 
 			echo -n "plugin-tcp:${plugin}, " | tr [a-z] [A-Z]
 			sed "s/^/server=\//;s/$/\/127.0.0.1#${plugin_tcpport}/" ${DATA}/gfwlist ${DATA}/tldn >${TARGET}/plugin-tcp_${plugin}.conf
-#			echo "server=/${ss_watchdog}/127.0.0.1#${plugin_tcpport}" >>${TARGET}/plugin_${plugin}.conf
+			echo "server=/${ss_watchdog}/127.0.0.1#${plugin_tcpport}" >>${TARGET}/plugin_${plugin}.conf
 		}
 	done
 
@@ -76,8 +76,8 @@ start() {
 		(/usr/bin/dnsFtcp -p $tcpport -s ${server}:53 >/dev/null 2>&1) &
 		echo -n "CLEAN-DNS:${server}, " && sed "s/^/server=\//;s/$/\/${server}/" ${DATA}/gfwlist ${DATA}/tldn >${TARGET}/clean_${server}.conf
 		echo -n "CLEAN-DNS-TCP:${server}, " && sed "s/^/server=\//;s/$/\/127.0.0.1#${tcpport}/" ${DATA}/gfwlist ${DATA}/tldn >>${TARGET}/clean_${server}.conf
-#		echo "server=/${ss_watchdog}/${server}" >>${TARGET}/plugin_${plugin}.conf
-#		echo "server=/${ss_watchdog}/127.0.0.1#${tcpport}" >>${TARGET}/plugin_${plugin}.conf
+		echo "server=/${ss_watchdog}/${server}" >>${TARGET}/plugin_${plugin}.conf
+		echo "server=/${ss_watchdog}/127.0.0.1#${tcpport}" >>${TARGET}/plugin_${plugin}.conf
 	done
 
 	[ 0 -lt $(sed -n '/wan_bp_list/p' /etc/config/shadowsocks* 2>/dev/null | grep -c 'chnroute') ] &&
@@ -134,27 +134,13 @@ start() {
 
 		uci_bool_by_type ${NAME} general overwrite_resolve && {
 			uci_bool_by_type ${NAME} general overwrite_smartdns && {
-				[ -x /usr/bin/smartdns ] && {
-					pgrep -f 'smartdns.cn.conf' >/dev/null || {
-						sed 's+\(enable_cn.*\)[0-9]+\11+g' -i /etc/config/smartdns
-						/etc/init.d/smartdns restart >/dev/null 2>&1
-					}
-					local smartdns_port=$(uci_get_by_type smartdns smartdns port 0000)
-					echo "server=127.0.0.1#$((smartdns_port + 1))" >>${TARGET}/misc_custom.conf
-					sed "s+/#$+/127.0.0.1#$((smartdns_port + 1))+g" -i ${TARGET}/*.conf
+				pgrep -f 'smartdns.cn.conf' >/dev/null || {
+					sed 's+\(enable_cn.*\)[0-9]+\11+g' -i /etc/config/smartdns
+					/etc/init.d/smartdns restart >/dev/null 2>&1
 				}
-			}
-
-			uci_bool_by_type ${NAME} general overwrite_dnsproxy && {
-				[ -x /usr/bin/dnsproxy ] && {
-					local dnsproxy_port=$(uci_get_by_type dnsproxy dnsproxy port_cn 0000)
-					pgrep -f "\-p $dnsproxy_port" >/dev/null || {
-						sed 's+\(enable_cn.*\)[0-9]+\11+g' -i /etc/config/dnsproxy
-						/etc/init.d/dnsproxy restart >/dev/null 2>&1
-					}
-					echo "server=127.0.0.1#$dnsproxy_port" >>${TARGET}/misc_custom.conf
-					sed "s+/#$+/127.0.0.1#$dnsproxy_port+g" -i ${TARGET}/*.conf
-				}
+				local smartdns_port=$(uci_get_by_type smartdns smartdns port 0000)
+				echo "server=127.0.0.1#$((smartdns_port + 1))" >>${TARGET}/misc_custom.conf
+				sed "s+/#$+/127.0.0.1#$((smartdns_port + 1))+g" -i ${TARGET}/*.conf
 			}
 
 			local tcpport=8200
@@ -223,14 +209,13 @@ restart() {
 
 update() {
 	update_sub 'chnroute.txt'
+	update_sub 'chinadns'
 	update_sub 'gfwlist'
 	update_sub 'direct'
 	update_sub 'custom.conf'
 	update_sub 'line'
 	update_sub 'stadisable'
 	update_sub 'staenable'
-	update_sub 'chinadnsconfig'
-	update_sub 'chinadns'
 	update_sub 'dnsmasq-extra'
 	update_sub 'dnsmasq-extraconfig'
 	update_others

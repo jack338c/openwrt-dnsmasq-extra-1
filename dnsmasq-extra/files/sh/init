@@ -209,6 +209,7 @@ restart() {
 
 update() {
 	update_sub 'chnroute.txt'
+	update_sub 'chinadns'
 	update_sub 'gfwlist'
 	update_sub 'direct'
 	update_sub 'custom.conf'

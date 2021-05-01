@@ -36,7 +36,7 @@ define Package/ChinaDNS
 	CATEGORY:=Network
 	TITLE:=Protect yourself against DNS poisoning in China.
 	URL:=https://github.com/shadowsocks/ChinaDNS
-	DEPENDS:=+curl +cdns +dnsFtcp
+	DEPENDS:=+curl +dnsFtcp
 endef
 
 define Package/ChinaDNS/description
