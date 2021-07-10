@@ -5,7 +5,7 @@ START=69
 EXTRA_COMMANDS="rules update"
 
 NAME=dnsmasq-extra
-BLOCK=""
+BLOCK=127.0.0.1
 DATA=/etc/${NAME}.d
 TARGET=/var/dnsmasq.d
 
