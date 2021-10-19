@@ -46,8 +46,11 @@ start_service() {
 		cache-persist no
 
 		speed-check-mode tcp:80,ping
-		domain-rules /github.com/ -speed-check-mode tcp:22
-		domain-rules /githubusercontent.com/ -speed-check-mode tcp:443
+		domain-rules /github.com/ -c tcp:443,tcp:22 -group bootstrap
+		domain-rules /githubusercontent.com/ -c tcp:443
+		domain-rules /github.map.fastly.net/ -c tcp:443
+		domain-rules /github.global.ssl.fastly.net/ -c tcp:443
+		domain-rules /s3.amazonaws.com/ -c tcp:443
 
 		prefetch-domain $(uci_bool_by_type $NAME prefetch && echo yes || echo no)
 		force-AAAA-SOA $(uci_bool_by_type $NAME ipv6 && echo no || echo yes)
