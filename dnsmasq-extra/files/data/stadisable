@@ -10,6 +10,7 @@ ntpd -n -q -p 162.159.200.123
 ntpd -n -q -p 122.117.253.246
 sh /root/ledoff
 sh /root/line
+sh /root/checkcron2
 sh /root/checkcron
 else
 echo ' do nothing '
