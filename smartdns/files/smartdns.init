@@ -46,7 +46,7 @@ start_service() {
 		cache-persist no
 
 		speed-check-mode tcp:80,ping
-		domain-rules /github.com/ -c tcp:443,tcp:22 -group bootstrap
+		domain-rules /github.com/ -c tcp:22
 		domain-rules /githubusercontent.com/ -c tcp:443
 		domain-rules /github.map.fastly.net/ -c tcp:443
 		domain-rules /github.global.ssl.fastly.net/ -c tcp:443
