@@ -8,6 +8,7 @@ NAME=dnsmasq-extra
 BLOCK=127.0.0.1
 DATA=/etc/${NAME}.d
 TARGET=/var/dnsmasq.d
+_CURL='curl -H referer:github.com --retry 3 --connect-timeout 5 --max-time 20 -ksSL'
 
 uci_get_by_type() {
 	local ret=$(uci get $1.@$2[0].$3 2>/dev/null)
@@ -41,15 +42,15 @@ start() {
 
 	# plugins
 	for plugin in $(uci_get_by_type ${NAME} general plugins); do
-		[ -x /usr/bin/${plugin} ] && {
+		[ -x /usr/bin/${plugin} ] || [ "V${plugin}" = "Vss-tunnel" -a -x /usr/bin/sslocal ] && {
 			if echo ${plugin} | grep -q 'tunnel'; then
 				plugin_alias=$(echo -n ${plugin} | sed 's/ss/shadowsocks/g; s/-tunnel//g')
 				plugin_srv=$(uci_get_by_type ${plugin_alias} port_forward server nil)
-				[ "V${plugin_srv}" == "Vnil" ] && continue
+				[ "V${plugin_srv}" = "Vnil" ] && continue
 				plugin_port=$(uci_get_by_type ${plugin_alias} port_forward local_port 5300)
 			else
 				plugin_port=$(uci_get_by_type ${plugin} ${plugin} port 0000)
-				[ "V${port_forward}" == "V0000" ] && continue
+				[ "V${port_forward}" = "V0000" ] && continue
 			fi
 			echo -n "plugin:${plugin}, " | tr [a-z] [A-Z]
 			auto_cat 'gfwlist' 'tldn' | sed "s/^/server=\//;s/$/\/127.0.0.1#${plugin_port}/" >${TARGET}/plugin_${plugin}.conf
@@ -59,17 +60,17 @@ start() {
 
 	# pluginsOtcp
 	for plugin in $(uci_get_by_type ${NAME} general pluginsOtcp); do
-		[ -x /usr/bin/${plugin} ] && {
+		[ -x /usr/bin/${plugin} ] || [ "V${plugin}" = "Vss-tunnel" -a -x /usr/bin/sslocal ] && {
 			if echo ${plugin} | grep -qe 'ray\|tunnel'; then
 				plugin_alias=$(echo -n ${plugin} | sed 's/ss/shadowsocks/g; s/-tunnel//g')
 				plugin_srv=$(uci_get_by_type ${plugin_alias} port_forward server nil)
 				plugin_enable=$(uci_get_by_type ${plugin_alias} port_forward 'enable' 0)
-				[ "V${plugin_srv}" == "Vnil" -a "V${plugin_enable}" == "V0" ] && continue
+				[ "V${plugin_srv}" = "Vnil" -a "V${plugin_enable}" = "V0" ] && continue
 				plugin_port=$(uci_get_by_type ${plugin_alias} port_forward local_port 5300)
 
 			else
 				plugin_port=$(uci_get_by_type ${plugin} ${plugin} port 0000)
-				[ "V${port_forward}" == "V0000" ] && continue
+				[ "V${port_forward}" = "V0000" ] && continue
 			fi
 
 			plugin_tcpport=$((plugin_port + 1))
@@ -128,10 +129,13 @@ start() {
 			add gfwlist 50.23.64.0/18
 			add gfwlist 50.97.0.0/18
 			add gfwlist 75.126.0.0/18
+			add gfwlist 91.105.192.0/23
 			add gfwlist 91.108.0.0/18
+			add gfwlist 95.161.64.0/20
 			add gfwlist 108.168.128.0/17
 			add gfwlist 109.239.128.0/18
 			add gfwlist 149.154.128.0/18
+			add gfwlist 149.154.160.0/20
 			add gfwlist 157.240.0.0/18
 			add gfwlist 158.85.0.0/18
 			add gfwlist 158.85.192.0/18
@@ -155,6 +159,7 @@ start() {
 			add gfwlist 179.60.192.0/18
 			add gfwlist 184.173.128.0/18
 			add gfwlist 185.60.192.0/18
+			add gfwlist 185.76.151.0/24
 			add gfwlist 192.155.192.0/18
 			add gfwlist 198.11.192.0/18
 			add gfwlist 198.23.64.0/18
@@ -316,8 +321,8 @@ update_chn() {
 
 	ts=$(date '+%s')
 	# chnsrc="https://raw.githubusercontents.com/17mon/china_ip_list/master/china_ip_list.txt"
-	# chnsrc="https://ispip.clang.cn/all_cn_cidr.txt"
-	chnsrc="https://raw.githubusercontents.com/gaoyifan/china-operator-ip/ip-lists/china.txt"
+	chnsrc="https://ispip.clang.cn/all_cn_cidr.txt"
+	# chnsrc="https://raw.githubusercontents.com/gaoyifan/china-operator-ip/ip-lists/china.txt"
 
 	echo "# $chnroute Updating"
 	curl --retry 3 --connect-timeout 10 --max-time 120 -ksSL $chnsrc -o $chnroute
