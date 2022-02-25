@@ -127,22 +127,26 @@ start_service() {
 			nameserver /dot.360.cn/bootstrap
 			nameserver /dns.alidns.com/bootstrap
 
-			server-tls dns.pub:853 -host-name dns.pub -tls-host-verify
-			server-tls dot.pub:853 -host-name dot.pub -tls-host-verify
-			server-tls dot.360.cn:853 -host-name dot.360.cn -tls-host-verify
+			server-tls 120.53.53.53:853 -host-name dot.pub -tls-host-verify
 			server-tls 223.6.6.6:853 -host-name dns.alidns.com -tls-host-verify
-			server-https https://doh.pub/dns-query -host-name doh.pub -tls-host-verify
-			server-https https://doh.360.cn/dns-query -host-name doh.360.cn -tls-host-verify
+			server-tls dot.360.cn:853 -host-name dot.360.cn -tls-host-verify
+			server-https https://1.12.12.12/dns-query -host-name doh.pub -tls-host-verify
 			server-https https://223.5.5.5/dns-query -host-name dns.alidns.com -tls-host-verify
+			server-https https://doh.360.cn/dns-query -host-name doh.360.cn -tls-host-verify
 		EOF
 
 		uci_bool_by_type $NAME enable_cn_cdn && {
 			echo -e "\n# CN-CDN" >>"/var/etc/${NAME}_cn.conf"
+			# server 202.141.162.123 -group cdn -exclude-default-group
+			# server-tcp 202.141.162.123 -group cdn -exclude-default-group
+			# server 202.141.176.93 -group cdn -exclude-default-group
+			# server-tcp 202.141.176.93 -group cdn -exclude-default-group
 			cat <<-EOF >>"/var/etc/${NAME}_cn.conf"
+				server 61.132.163.68 -group cdn -exclude-default-group
 				server-tcp 61.132.163.68 -group cdn -exclude-default-group
+				server 202.102.213.68 -group cdn -exclude-default-group
 				server-tcp 202.102.213.68 -group cdn -exclude-default-group
-				server-tcp 202.141.162.123 -group cdn -exclude-default-group
-				server-tcp 202.141.176.93 -group cdn -exclude-default-group
+				server 118.118.118.118 -group cdn -exclude-default-group
 				server-tcp 118.118.118.118 -group cdn -exclude-default-group
 
 				domain-rules /360buyimg.com/ -nameserver cdn -speed-check-mode tcp:443,ping
