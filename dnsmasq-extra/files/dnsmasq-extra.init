@@ -313,6 +313,7 @@ update_sub() {
 	echo "# $file is broken, failsafe Now!"
 	rm -f "${file}"
 	cp -f "${bak}" "${file}" || cp -f "/rom${file}" "${file}"
+	rm -f "${bak}"
 }
 
 update_chn() {
