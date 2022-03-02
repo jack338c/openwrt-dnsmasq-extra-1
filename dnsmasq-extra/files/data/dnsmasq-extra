@@ -266,25 +266,32 @@ restart() {
 
 update() {
 	update_sub 'chnroute.txt'
+	update_sub 'chinadns'
 	update_sub 'gfwlist'
 	update_sub 'direct'
 	update_sub 'custom.conf'
-	update_sub 'tldn'
-	update_sub 'adblock'
 	update_sub 'line'
 	update_sub 'stadisable'
 	update_sub 'staenable'
 	update_sub 'dnsmasq-extra'
-	update_sub 'smartdns'
-	update_sub 'smartdnsini'
 	update_sub 'dnsmasq-extraconfig'
+	update_others
+}
+
+update_others() {
+	overlay_free=$(df -k | grep -E '^overlay' | awk '{print $4}')
+	# only update data: adblock/tldn when disk free > 1MiB
+	[ "Z$overlay_free" == "Z" ] && return 0
+	[ $overlay_free -lt 300 ] && return 0
+	update_sub 'tldn'
+	update_sub 'adblock'
 }
 
 update_sub() {
 	sub=$1
 	file="/etc/${NAME}.d/${sub}"
 	ts=$(date '+%s')
-	src="https://raw.githubusercontent.com/David3434/openwrt-${NAME}/main/${NAME}/files/data/${sub}"
+	src="https://raw.githubusercontent.com/phx135/openwrt-${NAME}/master/${NAME}/files/data/${sub}"
 
 	oldHash=$(md5sum ${file} 2>/dev/null | sed 's/ .*//g')
 	newHash=$(curl --retry 3 --connect-timeout 5 --max-time 20 -ksSL "${src}.md5sum?${ts}" | sed 's/ .*//g')
@@ -306,6 +313,7 @@ update_sub() {
 	echo "# $file is broken, failsafe Now!"
 	rm -f "${file}"
 	cp -f "${bak}" "${file}" || cp -f "/rom${file}" "${file}"
+	rm -f "${bak}"
 }
 
 update_chn() {
