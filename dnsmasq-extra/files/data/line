@@ -1,13 +1,13 @@
 #!/bin/sh
 curl 'cip.cc' > /tmp/line.txt
 LINE=/tmp/line.txt
-if cat $LINE | grep -q 联通; then
-echo unicom
-cp -f /etc/xfileu/xfile/* /etc/xfile/
-elif cat $LINE | grep -q 移动; then
-echo cmcc
-cp -f /etc/xfilem/xfile/* /etc/xfile/
-else
-echo telecom
-cp -f /etc/xfilect/xfile/* /etc/xfile
-fi
+#if cat $LINE | grep -q 联通; then
+#echo unicom
+#cp -f /etc/xfileu/xfile/* /etc/xfile/
+#elif cat $LINE | grep -q 移动; then
+#echo cmcc
+#cp -f /etc/xfilem/xfile/* /etc/xfile/
+#else
+#echo telecom
+#cp -f /etc/xfilect/xfile/* /etc/xfile
+#fi
