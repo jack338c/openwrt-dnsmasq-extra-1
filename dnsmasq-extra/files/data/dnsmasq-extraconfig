@@ -2,7 +2,6 @@
 config general
 	option enable            'enabled'
 	option adblock           'enabled'
-	list plugins             'adguard-home'
 	list plugins             'smartdns'
 	list plugins             'dnsproxy'
 	list pluginsOtcp         'xray'
