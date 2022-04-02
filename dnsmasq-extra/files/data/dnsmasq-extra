@@ -1,11 +1,11 @@
 #!/bin/sh /etc/rc.common
-# Copyright (C) 2018-2021 honwen <https://github.com/honwen>
+# Copyright (C) 2018-2022 honwen <https://github.com/honwen>
 
 START=69
 EXTRA_COMMANDS="rules update"
 
 NAME=dnsmasq-extra
-BLOCK=127.0.0.1
+BLOCK=""
 DATA=/etc/${NAME}.d
 TARGET=/var/dnsmasq.d
 _CURL='curl -H referer:github.com --retry 3 --connect-timeout 5 --max-time 20 -ksSL'
