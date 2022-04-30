@@ -8,7 +8,7 @@ NAME=dnsmasq-extra
 BLOCK=""
 DATA=/etc/${NAME}.d
 TARGET=/var/dnsmasq.d
-_CURL='curl -H referer:github.com --retry 3 --connect-timeout 5 --max-time 20 -ksSL'
+_CURL='curl -H referer:github.com --retry 3 --connect-timeout 5 --max-time 55 -ksSL'
 
 uci_get_by_type() {
 	local ret=$(uci get $1.@$2[0].$3 2>/dev/null)

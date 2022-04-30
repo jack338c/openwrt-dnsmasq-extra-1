@@ -62,6 +62,7 @@ start_service() {
 		log-size 512K
 		log-num 2
 
+		address /dns11.quad9.net/149.112.112.11
 		$(
 			for it in $(uci_get_by_type $NAME bootstrap); do
 				echo "server ${it} -group bootstrap -exclude-default-group"
