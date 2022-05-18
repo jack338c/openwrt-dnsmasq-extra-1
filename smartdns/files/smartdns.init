@@ -46,6 +46,7 @@ start_service() {
 		# tcp-idle-time 0
 		cache-size 768
 		cache-persist no
+		serve-expired yes
 
 		speed-check-mode tcp:80,ping
 		domain-rules /github.com/ -c tcp:22
@@ -56,6 +57,7 @@ start_service() {
 
 		prefetch-domain $(uci_bool_by_type $NAME prefetch && echo yes || echo no)
 		force-AAAA-SOA $(uci_bool_by_type $NAME ipv6 && echo no || echo yes)
+		dualstack-ip-selection $(uci_bool_by_type $NAME ipv6 && echo yes || echo no)
 
 		log-level info
 		log-file /var/log/smartdns.log
@@ -102,12 +104,13 @@ start_service() {
 			# tcp-idle-time 0
 			cache-size 1024
 			cache-persist no
+			serve-expired yes
 
 			speed-check-mode ping,tcp:80
 
 			prefetch-domain $(uci_bool_by_type $NAME prefetch && echo yes || echo no)
 			force-AAAA-SOA $(uci_bool_by_type $NAME ipv6 && echo no || echo yes)
-			serve-expired yes
+			dualstack-ip-selection $(uci_bool_by_type $NAME ipv6 && echo yes || echo no)
 
 			log-level info
 			log-file /var/log/smartdns_cn.log
@@ -136,7 +139,7 @@ start_service() {
 			server-https https://doh.360.cn/dns-query -host-name doh.360.cn -tls-host-verify
 		EOF
 
-		uci_bool_by_type $NAME enable_cn_cdn && {
+		uci_bool_by_type $NAME enable_cdn_cn && {
 			echo -e "\n# CN-CDN" >>"/var/etc/${NAME}_cn.conf"
 			# server 202.141.162.123 -group cdn -exclude-default-group
 			# server-tcp 202.141.162.123 -group cdn -exclude-default-group
@@ -183,11 +186,13 @@ stop_service() {
 
 add_cron() {
 	sed -i "/${NAME}/d" $CRON_FILE
-	echo "*    *    * * * /etc/init.d/${NAME} healthcheck" >>$CRON_FILE
+	echo "0    *    * * *  rm -f /var/log/${NAME}_healthcheck.log 2>&1" >>$CRON_FILE
+	echo "*    *    * * * /etc/init.d/${NAME} healthcheck >> /var/log/${NAME}_healthcheck.log 2>&1" >>$CRON_FILE
 	/etc/init.d/cron restart
 }
 
 del_cron() {
+	grep -q "${NAME}" $CRON_FILE || return 0
 	sed -i "/${NAME}/d" $CRON_FILE
 	/etc/init.d/cron restart
 }
@@ -208,24 +213,35 @@ EOF
 }
 
 healthcheck() {
+	uci_bool_by_type $NAME enable || {
+		del_cron
+		return 1
+	}
+
 	# init check
+	LOGTIME=$(date "+%Y-%m-%d %H:%M:%S")
 	grep 'pending' /var/log/${NAME}*.log | grep -q 'failed' && {
 		rm -f /var/log/${NAME}*
+		echo "[${LOGTIME}] Problem-Init decteted, restarting ${NAME}..."
 		/etc/init.d/${NAME} restart
-		exit 0
+		return 0
 	}
 
 	# smartdns check
 	/usr/bin/pgrep -f ${NAME}.conf >/dev/null || {
+		echo "[${LOGTIME}] Problem decteted, restarting ${NAME}..."
 		/etc/init.d/${NAME} restart
-		exit 0
+		return 0
 	}
 
 	# smartdns_cn check
 	uci_bool_by_type $NAME enable_cn && {
 		/usr/bin/pgrep -f ${NAME}_cn.conf >/dev/null || {
+			echo "[${LOGTIME}] Problem decteted, restarting ${NAME}..."
 			/etc/init.d/${NAME} restart
-			exit 0
+			return 0
 		}
 	}
+
+	echo "[${LOGTIME}] ${NAME} No Problem."
 }

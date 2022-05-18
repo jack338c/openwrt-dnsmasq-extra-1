@@ -176,6 +176,13 @@ start() {
 		echo "all-servers" >${TARGET}/misc_custom.conf
 		echo "conf-file=${DATA}/custom.conf" >>${TARGET}/misc_custom.conf
 
+		# https://github.com/coolsnowwolf/lede/tree/master/package/network/services/dnsmasq/patches
+		for filter in $(uci_get_by_type ${NAME} general filters); do
+			dnsmasq --help | grep -q "filter-${filter}" && {
+				echo "filter-${filter}" >>${TARGET}/misc_custom.conf
+			}
+		done
+
 		uci_bool_by_type ${NAME} general overwrite_resolve && {
 			sed "/\/#$/d" -i ${TARGET}/*.conf
 
