@@ -184,6 +184,9 @@ start() {
 		done
 
 		uci_bool_by_type ${NAME} general overwrite_resolve && {
+			_tmp_list="/tmp/.custom.$(date '+%s').list"
+			sed -n 's+#$++p' ${TARGET}/*.conf >$_tmp_list
+
 			sed "/\/#$/d" -i ${TARGET}/*.conf
 
 			uci_bool_by_type ${NAME} general overwrite_aiodns && {
@@ -191,6 +194,7 @@ start() {
 					local aiodns_port=$(uci_get_by_type aiodns aiodns port 7100)
 					echo "server=/${ss_watchdog}/127.0.0.1#${aiodns_port}" >>${TARGET}/misc_custom.conf
 					echo "server=127.0.0.1#$aiodns_port" >>${TARGET}/misc_custom.conf
+					sed "s+$+127.0.0.1#$aiodns_port+g" $_tmp_list >>${TARGET}/misc_direct.conf
 				}
 			}
 
@@ -199,6 +203,7 @@ start() {
 					local dcompass_port=$(uci_get_by_type dcompass dcompass port 7500)
 					echo "server=/${ss_watchdog}/127.0.0.1#${dcompass_port}" >>${TARGET}/misc_custom.conf
 					echo "server=127.0.0.1#$dcompass_port" >>${TARGET}/misc_custom.conf
+					sed "s+$+127.0.0.1#$dcompass_port+g" $_tmp_list >>${TARGET}/misc_direct.conf
 				}
 			}
 
@@ -210,6 +215,7 @@ start() {
 					}
 					local smartdns_port=$(uci_get_by_type smartdns smartdns port 0000)
 					echo "server=127.0.0.1#$((smartdns_port + 1))" >>${TARGET}/misc_custom.conf
+					sed "s+$+127.0.0.1#$((smartdns_port + 1))+g" $_tmp_list >>${TARGET}/misc_direct.conf
 				}
 			}
 
@@ -221,6 +227,7 @@ start() {
 						/etc/init.d/dnsproxy restart >/dev/null 2>&1
 					}
 					echo "server=127.0.0.1#$dnsproxy_port" >>${TARGET}/misc_custom.conf
+					sed "s+$+127.0.0.1#$dnsproxy_port+g" $_tmp_list >>${TARGET}/misc_direct.conf
 				}
 			}
 
@@ -229,9 +236,12 @@ start() {
 				tcpport=$((tcpport + 1))
 				(/usr/bin/dnsFtcp -p $tcpport -s ${server} >/dev/null 2>&1) &
 				echo "server=127.0.0.1#${tcpport}" >>${TARGET}/misc_custom.conf
+				sed "s+$+127.0.0.1#$tcpport+g" $_tmp_list >>${TARGET}/misc_direct.conf
 			done
 
 			echo -n ", OVERWRITE-RESOLVE" && echo 'no-resolv' >>${TARGET}/misc_custom.conf
+			echo "$(sort -u ${TARGET}/misc_direct.conf)" >${TARGET}/misc_direct.conf
+			rm -f /tmp/.custom.*.list
 		}
 	}
 
