@@ -40,25 +40,32 @@ start_service() {
 	mkdir -p /var/etc/ /var/log/
 
 	port=$(uci_get_by_type $NAME port 7700)
+	if [ 1024 -lt $port ]; then
+		if grep -q 'dnsmasq' /etc/shadow; then
+			user='dnsmasq'
+		elif grep -q 'nobody' /etc/shadow; then
+			user='nobody'
+		fi
+	fi
+	[ "V$user" = "V" ] && user='root'
 
 	cat <<-EOF >"/var/etc/${NAME}.conf"
 		bind 0.0.0.0:${port}
 		bind-tcp 0.0.0.0:${port}
-		# tcp-idle-time 0
-		cache-size 768
+		user $user
+		cache-size 1024
 		cache-persist no
 		serve-expired yes
 
-		speed-check-mode tcp:80,ping
+		max-reply-ip-num 2
+		rr-ttl-reply-max 600
+		speed-check-mode tcp:443,tcp:80,ping
 		domain-rules /github.com/ -c tcp:22
-		domain-rules /githubusercontent.com/ -c tcp:443
-		domain-rules /github.map.fastly.net/ -c tcp:443
-		domain-rules /github.global.ssl.fastly.net/ -c tcp:443
-		domain-rules /s3.amazonaws.com/ -c tcp:443
 
 		prefetch-domain $(uci_bool_by_type $NAME prefetch && echo yes || echo no)
-		force-AAAA-SOA $(uci_bool_by_type $NAME ipv6 && echo no || echo yes)
 		dualstack-ip-selection $(uci_bool_by_type $NAME ipv6 && echo yes || echo no)
+		force-AAAA-SOA $(uci_bool_by_type $NAME ipv6 && echo no || echo yes)
+		force-qtype-SOA 65
 
 		log-level info
 		log-file /var/log/smartdns.log
@@ -102,16 +109,19 @@ start_service() {
 		cat <<-EOF >"/var/etc/${NAME}_cn.conf"
 			bind 0.0.0.0:$((port + 1))
 			bind-tcp 0.0.0.0:$((port + 1))
-			# tcp-idle-time 0
-			cache-size 1024
+			user $user
+			cache-size 2048
 			cache-persist no
 			serve-expired yes
 
-			speed-check-mode ping,tcp:80
+			max-reply-ip-num 4
+			rr-ttl-reply-max 120
+			speed-check-mode ping,tcp:80,tcp:443
 
 			prefetch-domain $(uci_bool_by_type $NAME prefetch && echo yes || echo no)
-			force-AAAA-SOA $(uci_bool_by_type $NAME ipv6 && echo no || echo yes)
 			dualstack-ip-selection $(uci_bool_by_type $NAME ipv6 && echo yes || echo no)
+			force-AAAA-SOA $(uci_bool_by_type $NAME ipv6 && echo no || echo yes)
+			force-qtype-SOA 65
 
 			log-level info
 			log-file /var/log/smartdns_cn.log
@@ -188,7 +198,7 @@ stop_service() {
 add_cron() {
 	sed -i "/${NAME}/d" $CRON_FILE
 	echo "0    *    * * *  rm -f /var/log/${NAME}_healthcheck.log 2>&1" >>$CRON_FILE
-	echo "*    *    * * * /etc/init.d/${NAME} healthcheck >> /var/log/${NAME}_healthcheck.log 2>&1" >>$CRON_FILE
+	echo "*    *    * * * /etc/init.d/${NAME} healthcheck >> /var/log/_${NAME}_healthcheck.log 2>&1" >>$CRON_FILE
 	/etc/init.d/cron restart
 }
 
@@ -221,7 +231,7 @@ healthcheck() {
 
 	# init check
 	LOGTIME=$(date "+%Y-%m-%d %H:%M:%S")
-	grep 'pending' /var/log/${NAME}*.log | grep -q 'failed' && {
+	grep 'pending' /var/log/${NAME}*.log | grep -qE 'failed.$' && {
 		rm -f /var/log/${NAME}*
 		echo "[${LOGTIME}] Problem-Init decteted, restarting ${NAME}..."
 		/etc/init.d/${NAME} restart
