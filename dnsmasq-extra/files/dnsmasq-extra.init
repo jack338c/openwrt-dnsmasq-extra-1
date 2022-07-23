@@ -100,16 +100,16 @@ start() {
 
 	[ 0 -lt $(sed -n '/wan_bp_list/p' /etc/config/shadowsocks* /etc/config/xray* /etc/config/ssr* 2>/dev/null | grep -c 'chnroute') ] &&
 		echo -n "IPSET:*_spec_dst_bp for chnroute, " && {
-		auto_cat 'direct' | sed "s/^/ipset=\//;s/$/\/ss_spec_dst_bp/" >${TARGET}/ipset_direct.conf
+#		auto_cat 'direct' | sed "s/^/ipset=\//;s/$/\/ss_spec_dst_bp/" >${TARGET}/ipset_direct.conf
 		auto_cat 'direct' | sed "s/^/ipset=\//;s/$/\/ssr_spec_dst_bp/" >>${TARGET}/ipset_direct.conf
-		auto_cat 'direct' | sed "s/^/ipset=\//;s/$/\/xray_spec_dst_bp/" >>${TARGET}/ipset_direct.conf
+#		auto_cat 'direct' | sed "s/^/ipset=\//;s/$/\/xray_spec_dst_bp/" >>${TARGET}/ipset_direct.conf
 		auto_cat 'direct' | sed "s/^/server=\//;s/$/\/#/" >>${TARGET}/ipset_direct.conf
-		echo 'ipset=/cloudflare-dns.com/ss_spec_dst_sp' >>${TARGET}/ipset_direct.conf
+#		echo 'ipset=/cloudflare-dns.com/ss_spec_dst_sp' >>${TARGET}/ipset_direct.conf
 		echo 'ipset=/cloudflare-dns.com/ssr_spec_dst_sp' >>${TARGET}/ipset_direct.conf
-		echo 'ipset=/cloudflare-dns.com/xray_spec_dst_bp' >>${TARGET}/ipset_direct.conf
-		uci_get_by_type ${NAME} general clean_server | sed "s/^/ipset=\//;s/$/\/ss_spec_dst_bp/" >>${TARGET}/ipset_direct.conf
+#		echo 'ipset=/cloudflare-dns.com/xray_spec_dst_bp' >>${TARGET}/ipset_direct.conf
+#		uci_get_by_type ${NAME} general clean_server | sed "s/^/ipset=\//;s/$/\/ss_spec_dst_bp/" >>${TARGET}/ipset_direct.conf
 		uci_get_by_type ${NAME} general clean_server | sed "s/^/ipset=\//;s/$/\/ssr_spec_dst_bp/" >>${TARGET}/ipset_direct.conf
-		uci_get_by_type ${NAME} general clean_server | sed "s/^/ipset=\//;s/$/\/xray_spec_dst_bp/" >>${TARGET}/ipset_direct.conf
+#		uci_get_by_type ${NAME} general clean_server | sed "s/^/ipset=\//;s/$/\/xray_spec_dst_bp/" >>${TARGET}/ipset_direct.conf
 	}
 
 	if [ 0 -lt $(sed -n '/wan_bp_list/p' /etc/config/shadowsocks* /etc/config/xray* /etc/config/ssr* 2>/dev/null | grep -c 'flag_gfwlist') ]; then
