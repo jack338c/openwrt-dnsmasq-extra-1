@@ -6,6 +6,7 @@ USE_PROCD=1
 EXTRA_COMMANDS="healthcheck"
 
 CRON_FILE=/etc/crontabs/root
+LOG_DIR=/var/log/$NAME
 
 uci_get_by_type() {
 	local ret=$(uci get $NAME.@$1[0].$2 2>/dev/null)
@@ -37,7 +38,7 @@ start_service() {
 	add_cron
 	add_hotplug
 
-	mkdir -p /var/etc/ /var/log/
+	mkdir -p /var/etc/ $(dirname ${LOG_DIR})
 
 	port=$(uci_get_by_type $NAME port 7700)
 	if [ 1024 -lt $port ]; then
@@ -68,9 +69,9 @@ start_service() {
 		force-qtype-SOA 65
 
 		log-level info
-		log-file /var/log/smartdns.log
-		log-size 512K
-		log-num 2
+		log-file ${LOG_DIR}/${NAME}.log
+		log-size 256K
+		log-num 3
 
 		address /dns11.quad9.net/149.112.112.11
 		$(
@@ -83,16 +84,26 @@ start_service() {
 		$(
 			for type in tls https; do
 				for it in $(uci_get_by_type $NAME server_${type}); do
-					it=$(echo ${it} | sed 's+.*//++g; s+/.*++g' | sed 's+@.*++g')
+					it=$(echo ${it} | sed 's+.*//++g; s+/.*++g' | sed 's+@.*++g; s+:.*++g')
 					echo ${it} | grep -q '[0-9]$' || echo "nameserver /${it}/bootstrap"
 				done
-			done
+			done | sort -u
 		)
 
 		$(
 			for type in tls https; do
 				for it in $(uci_get_by_type $NAME server_${type}); do
-					echo "server-${type} ${it} -tls-host-verify" | sed 's+@+ -host-name +g'
+					echo -n "server-${type} "
+					if echo ${it} | grep -q '@'; then
+						echo "${it} -tls-host-verify" | sed 's+@+ -host-name +g'
+					else
+						echo -n ${it}
+						dname=$(echo ${it} | sed 's+.*//++g; s+/.*++g' | sed 's+@.*++g; s+:.*++g')
+						if ! echo ${dname} | grep -q '[0-9]$'; then
+							echo -n " -host-name ${dname}"
+						fi
+						echo " -tls-host-verify"
+					fi
 				done
 			done
 		)
@@ -124,9 +135,9 @@ start_service() {
 			force-qtype-SOA 65
 
 			log-level info
-			log-file /var/log/smartdns_cn.log
-			log-size 512K
-			log-num 2
+			log-file ${LOG_DIR}/${NAME}_cn.log
+			log-size 256K
+			log-num 3
 
 			$(
 				for it in $(uci_get_by_type $NAME bootstrap); do
@@ -197,8 +208,8 @@ stop_service() {
 
 add_cron() {
 	sed -i "/${NAME}/d" $CRON_FILE
-	echo "0    *    * * *  rm -f /var/log/${NAME}_healthcheck.log 2>&1" >>$CRON_FILE
-	echo "*    *    * * * /etc/init.d/${NAME} healthcheck >> /var/log/_${NAME}_healthcheck.log 2>&1" >>$CRON_FILE
+	echo "0    *    * * *  rm -f ${LOG_DIR}_healthcheck.log 2>&1" >>$CRON_FILE
+	echo "*    *    * * * /etc/init.d/${NAME} healthcheck >> ${LOG_DIR}_healthcheck.log 2>&1" >>$CRON_FILE
 	/etc/init.d/cron restart
 }
 
@@ -220,7 +231,7 @@ logger -t hotplug smartdns-reload
 
 exit $?
 EOF
-	chmod +x "/etc/hotplug.d/iface/${START}-${NAME}"
+	chmod a+x "/etc/hotplug.d/iface/${START}-${NAME}"
 }
 
 healthcheck() {
@@ -231,8 +242,8 @@ healthcheck() {
 
 	# init check
 	LOGTIME=$(date "+%Y-%m-%d %H:%M:%S")
-	grep 'pending' /var/log/${NAME}*.log | grep -qE 'failed.$' && {
-		rm -f /var/log/${NAME}*
+	grep 'pending' ${LOG_DIR}/${NAME}*.log | grep -qE 'failed.$' && {
+		rm -rf ${LOG_DIR}
 		echo "[${LOGTIME}] Problem-Init decteted, restarting ${NAME}..."
 		/etc/init.d/${NAME} restart
 		return 0
@@ -253,6 +264,9 @@ healthcheck() {
 			return 0
 		}
 	}
+
+	# log.gz cleanup
+	rm -f $(ls ${LOG_DIR}/*.gz 2>/dev/null | grep -v $(date +"%Y%m%d"))
 
 	echo "[${LOGTIME}] ${NAME} No Problem."
 }
