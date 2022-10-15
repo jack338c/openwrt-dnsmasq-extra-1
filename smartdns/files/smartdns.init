@@ -209,6 +209,7 @@ start_service() {
 				domain-rules /360buyimg.com/ -nameserver cdn -speed-check-mode tcp:443,ping
 				domain-rules /aicdn.com/ -nameserver cdn -speed-check-mode tcp:443,ping
 				domain-rules /alicdn.com/ -nameserver cdn -speed-check-mode tcp:443,ping
+				domain-rules /bootcdn.net/ -nameserver cdn -speed-check-mode tcp:443,ping
 				domain-rules /cnbetacdn.com/ -nameserver cdn -speed-check-mode tcp:443,ping
 				domain-rules /elemecdn.com/ -nameserver cdn -speed-check-mode tcp:443,ping
 				domain-rules /momentcdn.com/ -nameserver cdn -speed-check-mode tcp:443,ping
@@ -229,6 +230,7 @@ start_service() {
 				domain-rules /mwcname.com/ -nameserver cdn -speed-check-mode tcp:443,ping
 				domain-rules /alikunlun.com/ -nameserver cdn -speed-check-mode tcp:443,ping
 				domain-rules /ks-cdn.com/ -nameserver cdn -speed-check-mode tcp:443,ping
+				domain-rules /zhimg.com/ -nameserver cdn -speed-check-mode tcp:443,ping
 			EOF
 		}
 

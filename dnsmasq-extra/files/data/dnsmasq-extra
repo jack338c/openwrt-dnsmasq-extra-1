@@ -8,7 +8,7 @@ NAME=dnsmasq-extra
 BLOCK=""
 DATA=/etc/${NAME}.d
 TARGET=/var/dnsmasq.d
-_CURL='curl -H referer:github.com --retry 3 --connect-timeout 5 --max-time 55 -ksSL'
+_CURL='curl -H referer:github.com --retry 3 --connect-timeout 6 --max-time 55 -ksSL'
 
 uci_get_by_type() {
 	local ret=$(uci get $1.@$2[0].$3 2>/dev/null)
@@ -210,7 +210,7 @@ start() {
 			uci_bool_by_type ${NAME} general overwrite_smartdns && {
 				[ -x /usr/bin/smartdns ] && {
 					pgrep -f 'smartdns.cn.conf' >/dev/null || {
-						sed 's+\(enable_cn.*\)[0-9]+\11+g' -i /etc/config/smartdns
+						sed 's+\(enable_cn[ \t]*\)[^ ]*$+\1yes+g' -i /etc/config/smartdns
 						/etc/init.d/smartdns restart >/dev/null 2>&1
 					}
 					local smartdns_port=$(uci_get_by_type smartdns smartdns port 0000)
@@ -223,7 +223,7 @@ start() {
 				[ -x /usr/bin/dnsproxy ] && {
 					local dnsproxy_port=$(uci_get_by_type dnsproxy dnsproxy port_cn 0000)
 					pgrep -f "\-p $dnsproxy_port" >/dev/null || {
-						sed 's+\(enable_cn.*\)[0-9]+\11+g' -i /etc/config/dnsproxy
+						sed 's+\(enable_cn[ \t]*\)[^ ]*$+\1yes+g' -i /etc/config/dnsproxy
 						/etc/init.d/dnsproxy restart >/dev/null 2>&1
 					}
 					echo "server=127.0.0.1#$dnsproxy_port" >>${TARGET}/misc_custom.conf
