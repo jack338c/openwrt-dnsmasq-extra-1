@@ -283,15 +283,9 @@ restart() {
 
 update() {
 	update_sub 'chnroute.txt'
-	update_sub 'chinadns'
 	update_sub 'gfwlist'
 	update_sub 'direct'
 	update_sub 'custom.conf'
-	update_sub 'line'
-	update_sub 'stadisable'
-	update_sub 'staenable'
-	update_sub 'dnsmasq-extra'
-	update_sub 'dnsmasq-extraconfig'
 	update_others
 }
 
@@ -308,7 +302,7 @@ update_sub() {
 	sub=$1
 	file="/etc/${NAME}.d/${sub}"
 	ts=$(date '+%s')
-	src="https://raw.githubusercontent.com/phx135/openwrt-${NAME}/master/${NAME}/files/data/${sub}"
+	src="https://wp.ssgaff.cn:9876/openwrt-dnsmasq-extra-phx/${NAME}/files/data/${sub}"
 
 	oldHash=$(md5sum ${file} 2>/dev/null | sed 's/ .*//g')
 	newHash=$(curl --retry 3 --connect-timeout 5 --max-time 20 -ksSL "${src}.md5sum?${ts}" | sed 's/ .*//g')
