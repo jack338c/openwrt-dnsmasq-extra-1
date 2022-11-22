@@ -2,8 +2,8 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=aiodns
-PKG_VERSION:=v2022.1019
-PKG_RELEASE:=3aac050b1f
+PKG_VERSION:=v2022.1026
+PKG_RELEASE:=1c7152d688
 PKG_MAINTAINER:=honwen <https://github.com/honwen>
 
 # OpenWrt ARCH: arm, aarch64, i386, x86_64, mips, mipsel
