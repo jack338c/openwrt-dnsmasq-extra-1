@@ -2,10 +2,10 @@
 # Copyright (C) 2018-2022 honwen <https://github.com/honwen>
 
 START=69
+NAME=dnsmasq-extra
 EXTRA_COMMANDS="rules update"
 
-NAME=dnsmasq-extra
-BLOCK=""
+DNSMASQ_SOA=""
 DATA=/etc/${NAME}.d
 TARGET=/var/dnsmasq.d
 _CURL='curl -H referer:github.com --retry 3 --connect-timeout 6 --max-time 55 -ksSL'
@@ -169,7 +169,7 @@ start() {
 
 	uci_bool_by_type ${NAME} general adblock && {
 		echo -n "ADBLOCK, "
-		auto_cat 'adblock' | sed "s/^/address=\//;s/$/\/${BLOCK}/" >${TARGET}/misc_adblock.conf
+		auto_cat 'adblock' | sed "s/^/address=\//;s/$/\/${DNSMASQ_SOA}/" >${TARGET}/misc_adblock.conf
 	}
 
 	echo -n "CUSTOM" && {
@@ -290,6 +290,7 @@ update() {
 }
 
 update_others() {
+	baseurl="$1"
 	overlay_free=$(df -k | grep -E '^overlay' | awk '{print $4}')
 	# only update data: adblock/tldn when disk free > 1MiB
 	[ "Z$overlay_free" == "Z" ] && return 0
