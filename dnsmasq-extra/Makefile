@@ -1,11 +1,11 @@
 #
-# Copyright (C) 2018-2022 honwen <https://github.com/honwen>
+# Copyright (C) 2018-2023 honwen <https://github.com/honwen>
 #
 
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=dnsmasq-extra
-PKG_VERSION:=2022-12-29
+PKG_VERSION:=2023-02-01
 PKG_RELEASE:=1.9.10
 
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)

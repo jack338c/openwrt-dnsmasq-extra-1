@@ -305,18 +305,21 @@ update_sub() {
 	ts=$(date '+%s')
 	src="https://wp.ssgaff.cn:9876/openwrt-dnsmasq-extra-phx/${NAME}/files/data/${sub}"
 
-	oldHash=$(md5sum ${file} 2>/dev/null | sed 's/ .*//g')
-	newHash=$(curl --retry 3 --connect-timeout 5 --max-time 20 -ksSL "${src}.md5sum?${ts}" | sed 's/ .*//g')
+	newHash=$(${_CURL} "${src}.md5sum?${ts}" | sed 's/ .*//g')
+	[ -e $file ] && {
+		oldHash=$(md5sum ${file} 2>/dev/null | sed 's/ .*//g')
+		# echo $oldHash $newHash
 
-	# echo $oldHash $newHash
-	[ "Z$oldHash" == "Z" -o "Z$newHash" == "Z" ] && return 1
-	[ "$oldHash" == "$newHash" ] && echo "# $file NOT Needed Updated" && return 0
+		[ "Z$oldHash" = "Z" -o "Z$newHash" = "Z" ] && return 1
+		[ "$oldHash" = "$newHash" ] && echo "# $file NOT Needed Updated" && return 0
 
-	bak="/tmp/${sub}.backup"
-	cp -f "${file}" "${bak}"
-	curl --connect-timeout 10 --max-time 60 -ksSL "${src}?${ts}" -o ${file}
+		bak="/tmp/${sub}.backup"
+		cp -f "${file}" "${bak}"
+	}
+
+	$(echo "${_CURL}" | sed 's|max-time[ 0-9]*|max-time 150 |g') "${src}?${ts}" -o ${file}
 	oldHash=$(md5sum "${file}" 2>/dev/null | sed 's/ .*//g')
-	[ "Z$oldHash" == "Z$newHash" ] && {
+	[ "Z$oldHash" = "Z$newHash" ] && {
 		echo "# ${file} Updated"
 		rm -f "${bak}"
 		return 0

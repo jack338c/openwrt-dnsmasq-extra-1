@@ -196,6 +196,7 @@ start_service() {
 			$(
 				for it in $(uci_get_by_type $NAME ignore_ip); do echo "ignore-ip ${it}"; done
 			)
+
 		EOF
 
 		uci_bool_by_type $NAME enable_cdn_cn && {
